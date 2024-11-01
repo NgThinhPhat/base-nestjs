@@ -1,0 +1,6 @@
+{
+  "greeting": "Hello",
+  "PASSWORD_DOES_NOT_MATCH": "Password does not match",
+  "USER_CREATED": "User created successfully",
+  "Verification code sent": "Verification sent successfully"
+}
