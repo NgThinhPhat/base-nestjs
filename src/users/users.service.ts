@@ -10,7 +10,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) { }
+  ) {}
   @Roles(Role.Admin)
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
@@ -35,7 +35,16 @@ export class UsersService {
   async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 5);
   }
-
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      relations: ['roles', 'roles.permissions'],
+    });
+    if (user && user.password === pass) {
+      return user; // Ensure roles and permissions are loaded here
+    }
+    return null;
+  }
   async comparePassword(
     plainPassword: string,
     hashedPassword: string,

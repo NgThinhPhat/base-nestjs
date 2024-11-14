@@ -1,9 +1,14 @@
-import { Role } from 'src/roles/roles.entity';
+import { Post } from 'src/post/entities/post.entity';
+import { Profile } from 'src/profile/entities/profile.entity';
+import { Role } from 'src/roles/entities/roles.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,7 +32,14 @@ export class User {
   @Column({ default: false })
   isActive: boolean;
 
-  @ManyToMany(() => Role, (role) => role.users, { eager: true })
-  @JoinTable() // Creates the join table for the many-to-many relationship
+  @ManyToMany(() => Role, { cascade: true })
+  @JoinTable() // Manages the many-to-many relationship between users and roles
   roles: Role[];
+
+  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+  @JoinColumn() // Indicates this side will hold the foreign key
+  profile: Profile;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }

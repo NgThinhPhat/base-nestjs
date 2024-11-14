@@ -13,7 +13,13 @@ import { HttpExceptionFilter } from './http-exception.filter';
 import { CatchEverythingFilter } from './catch-everyting.filter';
 import { LanguageMiddleware } from './language.middleware';
 import { MailModule } from './mail/mail.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { SeedsModule } from './seeds/seeds.module';
 import * as cookieParser from 'cookie-parser';
+import { RolesPermissionsGuard } from './auth/guards/roles-permissions.guard';
+import { SeedService } from './seeds/seeds.service';
+import { PostModule } from './post/post.module';
+import { TagModule } from './tag/tag.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,17 +36,22 @@ import * as cookieParser from 'cookie-parser';
       username: 'root',
       password: 'root',
       database: 'base-nestjs',
+      entities: ['dist/**/entities/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
     }),
     RolesModule,
+    PermissionsModule,
+    SeedsModule,
+    PostModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: RolesPermissionsGuard,
     },
     {
       provide: APP_FILTER,
@@ -54,9 +65,16 @@ import * as cookieParser from 'cookie-parser';
   exports: [TypeOrmModule],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) { }
+  constructor(
+    private dataSource: DataSource,
+    private readonly seedService: SeedService,
+  ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LanguageMiddleware).forRoutes('*');
     consumer.apply(cookieParser()).forRoutes('*');
+  }
+  async onModuleInit() {
+    await this.seedService.seed();
+    console.log('Seeding completed!');
   }
 }
