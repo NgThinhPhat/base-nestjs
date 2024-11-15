@@ -32,6 +32,11 @@ export class AuthController {
     );
   }
   @Public()
+  @Get('check')
+  async check() {
+    return 'hello';
+  }
+  @Public()
   @Post('send-code')
   async sendVerificationCode(
     @Body('email') email: string,

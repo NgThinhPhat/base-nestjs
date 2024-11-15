@@ -78,7 +78,7 @@ export class SeedService {
       password: '123456',
     });
     const user3 = this.userRepository.create({
-      email: 'nguyenthinhphat3009@gmail.com',
+      email: 'nguyenthinhphat30091@gmail.com',
       password: '123456',
     });
 
