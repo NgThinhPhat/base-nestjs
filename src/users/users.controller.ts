@@ -8,17 +8,17 @@ export class UsersController {
 
   @Public()
   @Get('find-all')
-  async findAll() {
+  async findAll(): Promise<any> {
     return this.usersService.findAll();
   }
 
   @Post('find-one/:id')
-  async findOne(@Param('id') id: number) {
+  async findOne(@Param('id') id: number): Promise<any> {
     return this.usersService.findOne(id);
   }
 
   @Post('remove/:id')
-  async remove(@Param('id') id: number) {
+  async remove(@Param('id') id: number): Promise<any> {
     return this.usersService.remove(id);
   }
 }

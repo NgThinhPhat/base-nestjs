@@ -13,8 +13,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private mailService: MailService,
-    private usersService: UsersService,
-  ) {}
+  ) { }
 
   @Public()
   @Post('sign-in')
